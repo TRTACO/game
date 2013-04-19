@@ -1,0 +1,14 @@
+Any developers who have commited to this project must remember the pillars of the game:
+
+  Top-Down
+  Dungeon Crawler
+  Zombie
+  Bacteria/Virus
+  Referntial Humor
+  Rock, Paper, Scissors
+
+Always comment your code and check to make sure that you are not adding any unecessary
+features to the game. Make sure that you remember to remember the player's POV while
+playing the game.
+
+Most importantly: DON'T BREAK IT AND MAKE IT FUN!!!
