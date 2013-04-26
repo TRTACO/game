@@ -12,3 +12,5 @@ features to the game. Make sure that you remember to remember the player's POV w
 playing the game.
 
 Most importantly: DON'T BREAK IT AND MAKE IT FUN!!!
+
+FAQ and Documentation can be found at https://github.com/TRTACO/game/wiki/TACO-Game;
