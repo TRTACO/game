@@ -12,8 +12,10 @@ body {
 
 .container {
   width: 90%;
-  max-width: 600px;
+  max-width: 625px;
   margin: 0 auto;
+  font-size: 14px;
+  color: #DDDDDF;
 }
 
 section {
@@ -22,7 +24,7 @@ section {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  margin: 0 0 20px;
+  margin: 0 0 15px;
 }
 
 li {
@@ -58,7 +60,12 @@ header h1 {
 }
 
 header h1:before {
-  content: "./ ";
+  content: "<< ";
+  font-size: 24px;
+}
+
+header h1:after{
+  content: " >> ;P";
   font-size: 24px;
 }
 
@@ -73,6 +80,13 @@ header h2 {
   text-align: center;
   margin: 0;
 }
+
+/*
+#downloads .btn span {
+  display: inline-block;
+  position: relative;
+  left: 360px;
+}*/
 
 /* Main Content
 */
@@ -207,6 +221,7 @@ hr {
 
 .btn:hover {
   background: -webkit-linear-gradient(top, rgba(40, 40, 40, 0.6), rgba(35, 35, 35, 0.6) 50%, rgba(10, 10, 10, 0.8) 50%, rgba(0, 0, 0, 0.8));
+  color:yellow;
 }
 
 .btn .icon {
