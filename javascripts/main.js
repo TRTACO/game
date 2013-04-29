@@ -14,7 +14,9 @@ $(document).ready(function(){
 		//$('p').append('<div>text</div>');
 		$('h2').css({ 'color':'red'});
 		$('h1').after("<div>Hey, what's up!?!</div>");
+		
+		$('#progress').accordion({ heightStyle: "content", active:0});
 
 });
 
-console.log('This would be the main JS file.');
+//console.log('This would be the main JS file.');

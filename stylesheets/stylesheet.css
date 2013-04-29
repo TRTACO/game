@@ -12,7 +12,7 @@ body {
 
 .container {
   width: 90%;
-  max-width: 625px;
+  max-width: 675px;
   margin: 0 auto;
   font-size: 14px;
   color: #DDDDDF;
@@ -59,6 +59,15 @@ header h1 {
   -webkit-font-smoothing: antialiased;
 }
 
+header h1 a {
+	color: #b5e853;
+	text-decoration: none;
+}
+
+header h1 a:hover {
+	color: #b5e811;
+}
+
 header h1:before {
   content: "<< ";
   font-size: 24px;
@@ -67,6 +76,11 @@ header h1:before {
 header h1:after{
   content: " >> ;P";
   font-size: 24px;
+}
+
+#progress h4:after{
+  content: " [+]";
+  font-size: 14px;
 }
 
 header h2 {
@@ -79,6 +93,7 @@ header h2 {
   display: inline-block;
   text-align: center;
   margin: 0;
+  min-width: 65px;
 }
 
 /*
@@ -260,3 +275,8 @@ a {
 .cf {
   zoom:1;
 }
+
+#progress h4:hover{
+	text-decoration: underline;
+}
+
