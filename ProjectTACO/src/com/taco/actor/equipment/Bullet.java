@@ -1,14 +1,16 @@
 package com.taco.actor.equipment;
 
-import static java.lang.Math.*;
+import static java.lang.Math.PI;
+import static java.lang.Math.abs;
+import static java.lang.Math.cos;
+import static java.lang.Math.round;
+import static java.lang.Math.sin;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map.Entry;
 
 import com.taco.actor.Enemy;
 import com.taco.actor.Entity;
@@ -24,27 +26,29 @@ public class Bullet extends Item {
 	protected double direction;
 	protected double speed = 20;
 	private Location headingTowards;
-	//private Iterator<Location> locs;
+	// private Iterator<Location> locs;
 
 	{
 		width = 10;
 		height = 10;
 	}
 
-	/*private Bullet(double x, double y, double w, double h) {
-		super(x, y, w, h);
-	}*/
+	/*
+	 * private Bullet(double x, double y, double w, double h) { super(x, y, w,
+	 * h); }
+	 */
 
 	private Bullet() {
 		super();
 		damageDoes = 5;
-		health = 1000000;
+		health = Short.MAX_VALUE;
+		this.canTakeDamage = false;
 	}
 
 	public Bullet(Location initLoc, Path p) {
 		this();
 		this.path = p;
-		r.setRect(new Rectangle(initLoc.x - width / 2, initLoc.y - height / 2,
+		bounds.setRect(new Rectangle(initLoc.x - width / 2, initLoc.y - height / 2,
 				width, height));
 		headingTowards = path.next();
 		this.direction = getLocation().getDirectionTowards(headingTowards);
@@ -52,41 +56,42 @@ public class Bullet extends Item {
 
 	public Bullet(Location initLoc, double direction) {
 		this();
-		r.setRect(new Rectangle(initLoc.x - width / 2, initLoc.y - height / 2,
+		bounds.setRect(new Rectangle(initLoc.x - width / 2, initLoc.y - height / 2,
 				width, height));
 		this.direction = direction;
 	}
-	
-	public Bullet(Entity owner, double direction){
-		this(owner.getLocation(),direction);
+
+	public Bullet(Entity owner, double direction) {
+		this(owner.getLocation(), direction);
 		this.owner = owner;
 	}
-	
-	public Bullet(Entity owner, Path p){
+
+	public Bullet(Entity owner, Path p) {
 		this(owner.getLocation(), p);
 		this.owner = owner;
 	}
-	
+
 	public void move() {
 
 		// Hurt anything within range of bullet.
 		HashSet<Entity> set = new HashSet<Entity>(w.getMap().keySet());
 		set.remove(this);
 		set.remove(owner);
-		Entity[] e ={};
-		e=set.toArray(e);
-		for(int i = 0; i < e.length; i++){
-			//Entity.class.
-			if(owner.getClass().isAssignableFrom(Player.class))
+		Entity[] e = {};
+		e = set.toArray(e);
+		for (int i = 0; i < e.length; i++) {
+			// Entity.class.
+			if (owner.getClass().isAssignableFrom(Player.class))
 				;
-			else if(e[i] instanceof Enemy){
-				e[i]=null;
-			}
-			else;
+			else if (e[i] instanceof Enemy) {
+				set.remove(e[i]);
+			} else
+				;
 		}
-		set.clear();
-		set.addAll(Arrays.asList(e));
-		set.remove(null);
+		// set.clear();
+		// set.addAll(Arrays.asList(e));
+		e = null;
+		// System.gc();
 		Iterator<Entity> it = set.iterator();
 		while (it.hasNext()) {
 			try {
@@ -96,6 +101,8 @@ public class Bullet extends Item {
 						/ 4
 						+ (width + height) / 4) {
 					inflictDamage(entity);
+					if (entity.isDead() && entity instanceof Enemy)
+						w.getPlayer().numberKilled++;
 					die();
 					return;
 				}
@@ -117,18 +124,18 @@ public class Bullet extends Item {
 					+ (height + width) / 4) {
 				if (path.hasNext())
 					headingTowards = path.next();
-				else{
+				else {
 					die();
 					return;
 				}
 			}
-			
+
 			double turnSpeed = 5;
-			
+
 			double d = getDirectionTowards(headingTowards);
-			
-			direction%=360;
-			
+
+			direction %= 360;
+
 			if (abs(d - direction) >= 350) {
 				if (d - turnSpeed < direction)
 					direction += turnSpeed;
@@ -151,11 +158,15 @@ public class Bullet extends Item {
 						direction -= 0.5;
 			}
 			Location newLocation = getMidpoint();
-			direction = (abs(getDirectionTowards(headingTowards)-direction)>=10)?direction:direction;
+			direction = (abs(getDirectionTowards(headingTowards) - direction) >= 10) ? direction
+					: direction;
 			newLocation.x += cos((PI / 180) * (direction)) * speed;
 			newLocation.y += sin((PI / 180) * (direction)) * speed;
 			moveToByMidpoint(newLocation);
 		}
+
+		set = null;
+
 	}
 
 	@Override

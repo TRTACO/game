@@ -38,10 +38,12 @@ public class Location extends Point2D {
 		this((double) x, (double) y);
 	}
 
+	@Override
 	public double getX() {
 		return x;
 	}
 
+	@Override
 	public double getY() {
 		return y;
 	}
@@ -71,7 +73,10 @@ public class Location extends Point2D {
 	}
 
 	public double getDistanceTo(Entity e) {
-		return hypot(x - e.getMidpoint().x, y - e.getMidpoint().y);
+		if (e != null && !e.isDead())
+			return hypot(x - e.getMidpoint().x, y - e.getMidpoint().y);
+		else
+			return 0;
 	}
 
 	public double getDistanceTo(Location l) {
@@ -84,6 +89,8 @@ public class Location extends Point2D {
 	}
 
 	public double getDirectionTowards(Location l) {
+		if (l == null)
+			return Math.random() * 360;
 		double dir = ((atan2((l.y - y), (l.x - x))));
 		dir = dir * (180 / PI);
 		dir *= 10000;

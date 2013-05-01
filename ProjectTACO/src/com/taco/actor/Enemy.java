@@ -27,7 +27,7 @@ public class Enemy extends Actor {
 		super.update(g);
 	}
 
-	protected final int DELAY = 5;
+	protected final short DELAY = 5;
 	protected int currentDelay;
 
 	// Constantly move towards player by updating direction towards it

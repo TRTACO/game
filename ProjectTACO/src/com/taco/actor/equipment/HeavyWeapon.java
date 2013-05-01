@@ -7,7 +7,7 @@ public class HeavyWeapon extends Weapon {
 	public HeavyWeapon(Entity owner) {
 		super(owner);
 		damageDoes = 10;
-		delay = (int) (super.delay * 1.5);
+		delay = (short) (super.delay * 1.5);
 		oDelay = delay;
 	}
 

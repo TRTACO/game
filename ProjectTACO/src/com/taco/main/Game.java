@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.taco.actor.Enemy;
@@ -17,6 +18,7 @@ import com.taco.actor.HealthBar;
 import com.taco.actor.Player;
 import com.taco.actor.SquareEnemy;
 import com.taco.geometry.Square;
+import com.taco.level.Wave;
 import com.taco.world.Location;
 import com.taco.world.World;
 
@@ -25,16 +27,17 @@ public class Game extends JFrame {
 
 	public static int WIDTH; // = 1280;
 	public static int HEIGHT;// = 720;
-	private static final int FRAMES_PER_SECOND = 50;
-	private static final long FRAME_PERIOD = 1000000000L / FRAMES_PER_SECOND;
+	private static final short REC_FPS = 60;
+	private static short fps = 50;
+	private static final long FRAME_PERIOD = 1000000000L / fps;
 	private static final String NAME = "The Game";
 	private int numEnemies = 4;
 
 	private JPanel panel;
 	private Image image, bg;
-	public volatile static Graphics2D imageGraphics;
+	public static Graphics2D imageGraphics;
 
-	public volatile StateManager state = new StateManager();
+	public static StateManager state = new StateManager();
 
 	{
 	}
@@ -44,26 +47,42 @@ public class Game extends JFrame {
 	private World world;
 
 	public Game() {
+		initFrame(); // Initialize Window
+		HEIGHT = getHeight();
+		WIDTH = getWidth();
 		newGame();
 	}
 
 	private void newGame() {
-		initFrame(); // Initialize Window
-		HEIGHT = getHeight();
-		WIDTH = getWidth();
 		initImage(); // Initialize Graphics
 		initModel(); // Initialize Objects
 		state.setState(State.GAME);
+		wave = 1;
 	}
 
 	private void executeGameLoop() {
+		// Thread.currentThread().getThreadGroup().setMaxPriority(7);
+		// Thread.currentThread().setPriority(Thread.NORM_PRIORITY + 1);
 		long nextFrameStart = System.nanoTime();
 		while (true) {
+
 			do {
-				updateModel();
+				// updateModel();
 				nextFrameStart += FRAME_PERIOD;
 			} while (nextFrameStart < System.nanoTime());
-			renderFrame();
+
+			try {
+				renderFrame();
+			} catch (Exception e) {
+				System.out.println("EXITING DUE TO ERROR");
+				e.printStackTrace();
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+				executeGameLoop();
+			}
 			long remaining = nextFrameStart - System.nanoTime();
 			if (remaining > 0) {
 				try {
@@ -77,17 +96,24 @@ public class Game extends JFrame {
 	/**
 	 * Where you tell the program to actually update the object.
 	 */
-	private void updateModel() {
-		if (state.getState() == State.MENU) {
-			// state.setState(menu.getGameState());
-			// menu.update(state);
-		} else if (state.getState() == State.PAUSE) {
+	/*
+	 * private void updateModel() {
+	 * 
+	 * if (state.getState() == State.MENU) { //
+	 * state.setState(menu.getGameState()); // menu.update(state); } else if
+	 * (state.getState() == State.PAUSE) {
+	 * 
+	 * } else if (state.getState() == State.GAME) {
+	 * 
+	 * } else { // state.setState(State.MENU); }
+	 * 
+	 * }
+	 */
 
-		} else if (state.getState() == State.GAME) {
+	private static int wave = 1;
 
-		} else {
-			// state.setState(State.MENU);
-		}
+	public static int getWave() {
+		return wave;
 	}
 
 	/**
@@ -112,11 +138,14 @@ public class Game extends JFrame {
 		} else if (state.getState() == State.GAME) {
 			// HAS BEEN MOVED TO THE WORLD CLASS
 			// imageGraphics.fillRect(0, 0, WIDTH, HEIGHT);
-			try {
-				world.update();
-			} catch (Exception e) {
-				return;
+			if (world.getLiveEnemies().size() < wave + 2) {
+				Wave w = new Wave();
+				w.add(SquareEnemy.class.getName(), wave + 5);
+				world.spawn(w);
+				wave++;
 			}
+
+			world.update();
 		} else {
 			// state.setState(State.MENU);
 		}
@@ -146,6 +175,10 @@ public class Game extends JFrame {
 	private void initImage() {
 		image = createImage(WIDTH, HEIGHT);
 		imageGraphics = (Graphics2D) image.getGraphics();
+	}
+
+	public static String prompt(String message) {
+		return JOptionPane.showInputDialog(message);
 	}
 
 	// Initialize Objects
@@ -218,6 +251,10 @@ public class Game extends JFrame {
 			imageGraphics.setBackground(Color.BLACK);
 		} else
 			state.setState(State.PAUSE);
+	}
+
+	public void pause() {
+		state.setState(State.PAUSE);
 	}
 
 }

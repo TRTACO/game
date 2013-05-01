@@ -32,12 +32,14 @@ public class Wave extends HashSet<Enemy> {
 
 	public boolean add(String cls, int times) {
 		try {
-			Class e = Class.forName(cls);
+			Class<Enemy> e = (Class<Enemy>) Class.forName(cls);
 			if (!Enemy.class.isAssignableFrom(e))
 				return false;
 			else {
 				while (times > 0) {
-					add((Enemy) e.newInstance());
+					Enemy en = (e.newInstance());
+					add(e.cast(en));
+					times--;
 				}
 			}
 		} catch (ClassNotFoundException e) {
@@ -47,6 +49,27 @@ public class Wave extends HashSet<Enemy> {
 			return false;
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+	public boolean add(Class<Enemy> e, int times) {
+		try {
+			if (!Enemy.class.isAssignableFrom(e))
+				return false;
+			else {
+				while (times > 0) {
+					Enemy en = (e.newInstance());
+					add(e.cast(en));
+					times--;
+				}
+			}
+		} catch (InstantiationException ex) {
+			ex.printStackTrace();
+			return false;
+		} catch (IllegalAccessException ex) {
+			ex.printStackTrace();
 			return false;
 		}
 		return true;

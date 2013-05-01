@@ -30,6 +30,10 @@ public class Rectangle extends java.awt.geom.Rectangle2D {
 		this(r.topXL, r.topYL, r.width, r.height);
 	}
 
+	public Rectangle(Rectangle2D r) {
+		this(r.getX(), r.getY(), r.getWidth(), r.getHeight());
+	}
+
 	public Location getMidpoint() {
 		return new Location(midX, midY);
 	}
@@ -105,7 +109,7 @@ public class Rectangle extends java.awt.geom.Rectangle2D {
 		return temp;
 	}
 
-	// Checks if this rectangle is in r. If this rectangle touches any edge or
+	// Checks if this rectangle is in bounds. If this rectangle touches any edge or
 	// is not in the rectangle at all then this will return false.
 	public boolean isIn(Rectangle r) {
 		if (r.topXR > topXR && r.topXL < topXL && r.topYL < topYL
@@ -115,8 +119,8 @@ public class Rectangle extends java.awt.geom.Rectangle2D {
 			return false;
 	}
 
-	// Combines this rectangle and r, forming the largest possible rectangle
-	// from all coordinates (x and y) of this rectangle and r. Returns the new
+	// Combines this rectangle and bounds, forming the largest possible rectangle
+	// from all coordinates (x and y) of this rectangle and bounds. Returns the new
 	// rectangle.
 	public Rectangle union(Rectangle r) {
 		return new Rectangle(
@@ -202,7 +206,7 @@ public class Rectangle extends java.awt.geom.Rectangle2D {
 		r.updateMidpoint();
 	}
 
-	// Implemented exactly the same as createUnion(Rectangle2D r) for now
+	// Implemented exactly the same as createUnion(Rectangle2D bounds) for now
 	@Override
 	public Rectangle2D createIntersection(Rectangle2D r) {
 		// TODO Auto-generated method stub

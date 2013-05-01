@@ -13,27 +13,34 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.io.IOException;
 import java.util.HashSet;
 
 import com.taco.actor.equipment.Weapon;
 import com.taco.input.Keyboard;
 import com.taco.input.Mouse;
+import com.taco.main.Game;
 import com.taco.main.Main;
 import com.taco.world.Location;
 
 public class Player extends Actor implements KeyListener, MouseMotionListener {
 
-	private double turnSpeed;
+	// private double turnSpeed;
 	private Weapon w;
 	HashSet<Integer> keysPressed = new HashSet<Integer>();
+
+	// TODO: Create Player's ability to map own keys
+	// private Map<Character, Integer> keyMap = new HashMap<Character,
+	// Integer>();
 
 	public Player(double x, double y, double w, double h) {
 		super(x, y, w, h);
 		health = 150;
+		oHealth = health;
 		speed = 8.5;
 
 		originalSpeed = speed;
-		turnSpeed = 3;
+		// turnSpeed = 3;
 		this.w = new Weapon(this) {
 			@Override
 			public double getDirection() {
@@ -112,6 +119,11 @@ public class Player extends Actor implements KeyListener, MouseMotionListener {
 	// private String btnLastPressed = "W";
 
 	@Override
+	public void act() {
+		super.act();
+	};
+
+	@Override
 	public void update(Graphics2D g) {
 		direction %= 360;
 		/*
@@ -121,6 +133,10 @@ public class Player extends Actor implements KeyListener, MouseMotionListener {
 		 * btnLastPressed.equalsIgnoreCase("S"))) { w.direction = direction -
 		 * 180; w.update(g); } else ;
 		 */
+
+		if (health < oHealth)
+			health += (numberKilled - numKilledLastCheck) * 5;
+		numKilledLastCheck = numberKilled;
 
 		if (pressed(VK_SPACE) && mouseLocation != null) {
 			w.direction = getDirectionTowards(mouseLocation);
@@ -135,13 +151,32 @@ public class Player extends Actor implements KeyListener, MouseMotionListener {
 	public void draw(Graphics2D g) {
 		Color temp = g.getColor();
 		g.setColor(Color.BLUE);
-		g.fill(r);
+		g.fill(bounds);
 		g.setColor(temp);
 	}
 
 	@Override
 	public void die() {
 		super.die();
+
+		Graphics2D g = Game.imageGraphics;
+		Color temp = g.getColor();
+		g.setColor(Color.GREEN);
+		g.drawString("Game Over!\nEnemies Killed: " + numberKilled
+				+ "\nWave Number: " + Game.getWave()
+				+ "\n\nPress 'R' to restart.\n(RESTART NOT WORKING!)",
+				Game.WIDTH / 2, Game.HEIGHT / 2);
+		g.setColor(temp);
+		Main.game.pause();
+		try {
+			Game.state.saveHighScore(Game.prompt("What's your name?"),
+					numberKilled);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+
+		return;
+
 	}
 
 	@Override
@@ -154,6 +189,9 @@ public class Player extends Actor implements KeyListener, MouseMotionListener {
 		else
 			;
 	}
+
+	public int numberKilled;
+	private int numKilledLastCheck;
 
 	@Override
 	public void keyReleased(KeyEvent e) {
@@ -186,6 +224,10 @@ public class Player extends Actor implements KeyListener, MouseMotionListener {
 		}
 		// System.out.println(e.getLocationOnScreen());
 
+	}
+
+	public double getDirectionTowardsMouse() {
+		return getDirectionTowards(mouseLocation);
 	}
 
 }

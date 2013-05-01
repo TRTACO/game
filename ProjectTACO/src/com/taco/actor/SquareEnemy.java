@@ -19,12 +19,17 @@ public class SquareEnemy extends Enemy {
 	 * new Weapon(this); }
 	 */
 
+	public SquareEnemy() {
+		this(new Square(World.getRandLocation(), 18), Color.YELLOW);
+	}
+
 	public SquareEnemy(Square s, Color c) {
 		super(s.getX(), s.getY(), s.getWidth(), s.getHeight());
 		square = s;
 		color = c;
-		r = s;
-		speed = 2 + (double) ((rand.nextInt(50)) - 25) / 60;
+		bounds = s;
+		speed = 2 + (double) ((rand.nextInt(50)) - 25) / 60
+				+ ((Math.floor(Math.random() * 10)) / s.getHeight());
 		originalSpeed = speed;
 		health = 10;
 		weapon = new Weapon(this);
@@ -33,7 +38,7 @@ public class SquareEnemy extends Enemy {
 
 	@Override
 	public void draw(Graphics2D g) {
-		square.setRect(r);
+		square.setRect(bounds);
 		Color tempColor = g.getColor();
 		g.setColor(color);
 		g.fill(square);
@@ -82,15 +87,15 @@ public class SquareEnemy extends Enemy {
 					- ((rand.nextInt(55)/**/- 25/**/) / 60);
 
 			originalSpeed = speed;
-			r = parent.r.translate(
+			bounds = parent.bounds.translate(
 					Math.cos(((Math.PI) / 180) * parent.direction)
 							* rand.nextInt(15) * speed,
 					Math.sin((Math.PI) / 180 * parent.direction)
 							* rand.nextInt(15) * speed);
-			r.setWidth(r.getWidth() / 2);
-			square = new Square(r.getX(), r.getY(), r.getWidth());
+			bounds.setWidth(bounds.getWidth() / 2);
+			square = new Square(bounds.getX(), bounds.getY(), bounds.getWidth());
 			canMove = true;
-			r.setRect(square);
+			bounds.setRect(square);
 			turnSpeed = 3;
 		}
 
@@ -107,23 +112,25 @@ public class SquareEnemy extends Enemy {
 			if (canMove && World.isInWorld(this))
 				act();
 			else if (!World.isInWorld(this) && !isDead()) {
-				if (r.getMinX() < 0) {
-					r.setRect(r.translate(-r.getMinX() + 1, 0));
+				if (bounds.getMinX() < 0) {
+					bounds.setRect(bounds.translate(-bounds.getMinX() + 1, 0));
 				}
-				if (r.getMinY() < 0) {
-					r.setRect(r.translate(0, -r.getMinY() + 1));
+				if (bounds.getMinY() < 0) {
+					bounds.setRect(bounds.translate(0, -bounds.getMinY() + 1));
 				}
-				if (r.getMaxX() > World.MAX.x) {
-					r.setRect(r.translate(World.MAX.x - r.getMaxX() - 1, 0));
+				if (bounds.getMaxX() > World.MAX.x) {
+					bounds.setRect(bounds.translate(
+							World.MAX.x - bounds.getMaxX() - 1, 0));
 				}
-				if (r.getMaxY() > World.MAX.y) {
-					r.setRect(r.translate(0, World.MAX.y - r.getMaxY() - 1));
+				if (bounds.getMaxY() > World.MAX.y) {
+					bounds.setRect(bounds.translate(0,
+							World.MAX.y - bounds.getMaxY() - 1));
 				}
 				if (player != null)
 					setDirection(getDirectionTowards(player));
 			}
 
-			square = new Square(r.getX(), r.getY(), r.getWidth());
+			square = new Square(bounds.getX(), bounds.getY(), bounds.getWidth());
 
 			if (!isDead()) {
 				Location mid = getMidpoint();
@@ -138,7 +145,8 @@ public class SquareEnemy extends Enemy {
 		public void act() {
 			if (player == null || !w.getMap().containsKey(player))
 				player = w.getPlayer();
-
+			if (player == null)
+				return;
 			if (getDistanceTo(player) > player.width / 2 + width / 2) {
 				speed = originalSpeed;
 			} else {

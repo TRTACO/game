@@ -10,9 +10,11 @@ import com.taco.world.Location;
 public class Weapon extends Item {
 
 	protected Random rand = new Random();
-	
-	protected int delay = 6;
-	protected int oDelay = delay;
+
+	protected short delay = 6;
+	protected short oDelay = delay;
+
+	public double direction = -100000;
 
 	protected LinkedList<Bullet> bullets = new LinkedList<Bullet>();
 
@@ -24,14 +26,25 @@ public class Weapon extends Item {
 		this.owner = owner;
 	}
 
-	public void setDelay(int d){
+	public void setDelay(short d) {
 		delay = d;
 		oDelay = d;
 	}
-	
+
+	public void setDelay(int d) {
+		this.setDelay((short) d);
+	}
+
 	@Override
 	public double getDirection() {
+		if (direction != -100000)
+			return direction;
 		return owner.getDirection();
+	}
+
+	@Override
+	public void setDirection(double d) {
+		direction = d;
 	}
 
 	@Override
@@ -43,14 +56,14 @@ public class Weapon extends Item {
 		Bullet b = new Bullet(owner, getDirection());
 		bullets.add(b);
 		w.add(b);
-		delay=oDelay;
+		delay = oDelay;
 	}
 
 	@Override
 	public void update(Graphics2D g) {
 		delay--;
-		//uncomment delay in the if below for something cool!
-		if (!owner.isDead()&&delay<=0) {
+		// uncomment delay in the if below for something cool!
+		if (!owner.isDead() && delay <= 0) {
 			shoot();
 			removeDeadBullets();
 		}

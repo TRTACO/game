@@ -1,6 +1,9 @@
 package com.taco.actor.equipment;
 
+import java.awt.Graphics2D;
+
 import com.taco.actor.Entity;
+import com.taco.actor.Player;
 
 public class SpreadWeapon extends LightWeapon {
 
@@ -32,23 +35,33 @@ public class SpreadWeapon extends LightWeapon {
 	private void initWeapons() {
 		for (int index = 0; index < weapons.length; index++) {
 			final int thisIndex = index;
-			LightWeapon w = new LightWeapon(this) {
-				@Override
-				public double getDirection() {
-					return (owner.getDirection() + (angleRange * thisIndex)
-							/ (weapons.length) - 0.5 * angleRange);
-				}
-			};
+			final double t = 0.5 * angleRange - (angleRange * thisIndex)
+					/ (weapons.length);
+			LightWeapon w = new LightWeapon(owner);
 			weapons[index] = w;
 		}
 	}
 
 	@Override
 	public void shoot() {
+		int i = 0;
 		for (Weapon w : weapons) {
+			w.setDirection(((owner instanceof Player) ? ((Player) (owner))
+					.getDirectionTowardsMouse()
+					+ 0.5
+					* angleRange
+					- (angleRange * i) / (weapons.length) : (owner
+					.getDirection() + 0.5 * angleRange - (angleRange * i)
+					/ (weapons.length))));
 			w.shoot();
+			i++;
 		}
 		delay = oDelay;
+	}
+
+	@Override
+	public void update(Graphics2D g) {
+		super.update(g);
 	}
 
 }

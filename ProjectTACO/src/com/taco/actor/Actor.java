@@ -58,14 +58,14 @@ public class Actor extends Entity {
 		if (canMove && World.isInWorld(this))
 			act();
 		else if (!World.isInWorld(this) && !isDead()) {
-			if (r.getMinX() < 0)
-				r.setRect(r.translate(-r.getMinX() + 1, 0));
-			if (r.getMinY() < 0)
-				r.setRect(r.translate(0, -r.getMinY() + 1));
-			if (r.getMaxX() > World.MAX.x)
-				r.setRect(r.translate(World.MAX.x - r.getMaxX() - 1, 0));
-			if (r.getMaxY() > World.MAX.y)
-				r.setRect(r.translate(0, World.MAX.y - r.getMaxY() - 1));
+			if (bounds.getMinX() < 0)
+				bounds.setRect(bounds.translate(-bounds.getMinX() + 1, 0));
+			if (bounds.getMinY() < 0)
+				bounds.setRect(bounds.translate(0, -bounds.getMinY() + 1));
+			if (bounds.getMaxX() > World.MAX.x)
+				bounds.setRect(bounds.translate(World.MAX.x - bounds.getMaxX() - 1, 0));
+			if (bounds.getMaxY() > World.MAX.y)
+				bounds.setRect(bounds.translate(0, World.MAX.y - bounds.getMaxY() - 1));
 			// speed*=-1;
 
 		}

@@ -2,9 +2,11 @@ package com.taco.world;
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import com.taco.actor.Enemy;
 import com.taco.actor.Entity;
@@ -104,6 +106,17 @@ public class World {
 		for (Enemy e : w) {
 			add(e);
 		}
+	}
+
+	public Set<Enemy> getLiveEnemies() {
+		HashSet<Enemy> s = new HashSet<Enemy>();
+		Entity[] entities = new Entity[] {};
+		entities = charMap.keySet().toArray(entities);
+		for (Entity e : entities) {
+			if (e instanceof Enemy)
+				s.add((Enemy) e);
+		}
+		return s;
 	}
 
 }

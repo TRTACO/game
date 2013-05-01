@@ -12,13 +12,13 @@ import com.taco.world.World;
 public class Entity {
 
 	protected boolean canMove, canTakeDamage;
-	protected Rectangle r;
+	protected Rectangle bounds;
 	protected Image i;
 	protected double direction;
 	protected World w = Main.game.getWorld();
-	protected int damageDoes;
-	protected int health = 100;
-	protected int oHealth = health;
+	protected short damageDoes;
+	protected short health = 100;
+	protected short oHealth = health;
 	protected Color color;
 
 	protected double width, height;
@@ -28,16 +28,16 @@ public class Entity {
 	}
 
 	public Entity(double x, double y, double w, double h) {
-		// Initiate r to the image's height and width HERE.
+		// Initiate bounds to the image's height and width HERE.
 		this();
 
 		width = w;
 		height = h;
-		r = new Rectangle(x, y, w, h);
+		bounds = new Rectangle(x, y, w, h);
 	}
 
 	public Entity() {
-		r = new Rectangle();
+		bounds = new Rectangle();
 		oHealth = health;
 	}
 
@@ -51,32 +51,32 @@ public class Entity {
 	}
 
 	public void draw(Graphics2D g) {
-		g.draw(r);
+		g.draw(bounds);
 	}
 
 	public void moveTo(Location l) {
-		r.setRect(r.moveTo(l));
+		bounds.setRect(bounds.moveTo(l));
 	}
 
 	public void moveTo(double x, double y) {
-		r.setRect(r.moveTo(x, y));
+		bounds.setRect(bounds.moveTo(x, y));
 	}
 
 	public void moveToByMidpoint(double x, double y) {
-		r.setRect(r.moveToByMidpoint(x, y));
+		bounds.setRect(bounds.moveToByMidpoint(x, y));
 	}
 
 	public void moveToByMidpoint(Location l) {
-		r.setRect(r.moveToByMidpoint(l));
+		bounds.setRect(bounds.moveToByMidpoint(l));
 	}
 
 	public Rectangle getBounds() {
-		return r;
+		return bounds;
 	}
 
 	public Location getMidpoint() {
 		try {
-			return r.getMidpoint();
+			return bounds.getMidpoint();
 		} catch (NullPointerException e) {
 			return null;
 		}
@@ -89,9 +89,11 @@ public class Entity {
 			e = new Player();
 		else if (this instanceof Actor)
 			e = new Actor();
+		else if (this instanceof Enemy)
+			e = new Enemy();
 		else
 			e = new Entity();
-		e.r = this.r.moveTo(w.getRandLocation());
+		e.bounds = this.bounds.moveTo(World.getRandLocation());
 		e.canMove = this.canMove;
 		e.color = this.color;
 		e.damageDoes = this.damageDoes;
@@ -115,15 +117,15 @@ public class Entity {
 	}
 
 	public double getDirectionTowards(Entity e) {
-		return r.getMidpoint().getDirectionTowards(e);
+		return bounds.getMidpoint().getDirectionTowards(e);
 	}
 
 	public double getDirectionTowards(Location l) {
-		return r.getMidpoint().getDirectionTowards(l);
+		return bounds.getMidpoint().getDirectionTowards(l);
 	}
 
 	public double getDistanceTo(Entity e) {
-		return r.getMidpoint().getDistanceTo(e);
+		return bounds.getMidpoint().getDistanceTo(e);
 	}
 
 	public boolean doesDamage() {
@@ -162,7 +164,7 @@ public class Entity {
 	}
 
 	public void die() {
-		r = null;
+		bounds = null;
 		width = 0;
 		height = 0;
 		canMove = false;

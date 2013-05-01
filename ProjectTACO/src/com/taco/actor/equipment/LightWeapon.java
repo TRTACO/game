@@ -7,7 +7,7 @@ public class LightWeapon extends Weapon {
 	public LightWeapon(Entity owner) {
 		super(owner);
 		damageDoes = 2;
-		delay = (int) (super.delay * 0.25);
+		delay = (short) (super.delay * 0.25);
 		oDelay = delay;
 	}
 

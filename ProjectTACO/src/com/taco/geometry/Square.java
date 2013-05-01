@@ -48,6 +48,7 @@ public class Square extends Rectangle {
 		updateAllPointsFromTopLeft(this);
 	}
 	
+	@Override
 	public void setRect(Rectangle2D r){
 		super.setRect(r);
 		width=r.getHeight();

@@ -2,90 +2,84 @@ package com.taco.main;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class StateManager {
-	
+
 	private int currentState;
-	
+
 	public StateManager() {
 		currentState = State.MENU;
 	}
-	
+
 	public int getState() {
 		return currentState;
 	}
-	
+
 	public void setState(int newState) {
 		currentState = newState;
 	}
-	
-	public void saveHighScore(String name, long scr) throws IOException{
+
+	public void saveHighScore(String name, long scr) throws IOException {
 		File highScores = new File("highScores.taco");
-		FileWriter writer = new FileWriter(highScores);
-		if(highScores.exists()){
+		// FileWriter writerF = new FileWriter(highScores);
+
+		try {
 			Scanner sc = new Scanner(highScores);
-			//Sort Current High Scores (but is commented out).
-			//TreeMap<String,String> scoreMap = new TreeMap<Long, String>();
-			ArrayList<Long> scores = new ArrayList<Long>();
-			ArrayList<String> names = new ArrayList<String>();
-			while(sc.hasNextLine()){
-				//Get name
+			List<String> names = new ArrayList<String>();
+			List<Integer> scores = new ArrayList<Integer>();
+			while (sc.hasNextLine()) {
 				names.add(sc.next());
-				
-				//Get Score
-				long score = sc.nextLong();
-				scores.add(score);
-				
-				//scoreMap.put(score, name);
-				
-				//Move on to next line
+				scores.add(sc.nextInt());
 				sc.nextLine();
 			}
-			for(int i = 0; i < scores.size(); i++){
-				if(scores.get(i)>=scr){
-					
-				}
-				else{
-					scores.add(i, scr);
-					names.add(i,name);
-					break;
+
+			if (scores.size() >= 10 && scores.get(10) < scr) {
+				int n = scores.get(10);
+				for (int i = scores.size(); i > 0; i--) {
+
 				}
 			}
-			for(int i = 0; i < scores.size(); i++){
-				writer.write(names.get(i)+" "+scores.get(i));
+
+			else if (scores.size() < 10) {
+
 			}
-			writer.close();
-			sc.close();
+
+			else {
+				return;
+			}
+
+		} catch (FileNotFoundException e) {
+
+			PrintStream out = new PrintStream(highScores);
+
+			out.println(name + " " + scr + "\n");
+			out.close();
 		}
-		else{
-			writer.write(name+" "+scr);
-			writer.close();
-		}
+
 	}
-	
-	
-	public ArrayList<String> getHighScores(){
+
+	public ArrayList<String> getHighScores() {
 		File highScores = new File("highScores.taco");
 		ArrayList<String> scores = new ArrayList<String>();
-		if(highScores.exists()){
+		if (highScores.exists()) {
 			try {
 				Scanner sc = new Scanner(highScores);
-				while(sc.hasNext()){
+				while (sc.hasNext()) {
 					scores.add(sc.nextLine());
 				}
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 				scores.add("High Score file not found");
 			}
-		}
-		else{
+		} else {
 			scores.add("No High Scores");
 		}
-		
+
 		return scores;
 	}
 

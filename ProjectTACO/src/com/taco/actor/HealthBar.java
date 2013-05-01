@@ -16,23 +16,23 @@ public class HealthBar extends Entity {
 	public HealthBar(Entity e, Location l){
 		super();
 		width=200;
-		r = new Rectangle(l.x,l.y,width,40);
+		bounds = new Rectangle(l.x,l.y,width,40);
 		originalWidth=width;
 		owner=e;
 		originalHealth = e.health;
-		originalBar=new Rectangle(r);
+		originalBar=new Rectangle(bounds);
 		canMove=false;
 	}
 
 	@Override
 	public void draw(Graphics2D g) {
-		r.setWidth((owner.health/originalHealth)*200);
+		bounds.setWidth((owner.health/originalHealth)*200);
 		
 		g.setColor(Color.DARK_GRAY);
 		g.fill(originalBar);
 		
 		g.setColor(Color.GREEN);
-		g.fill(r);
+		g.fill(bounds);
 	}
 
 }
