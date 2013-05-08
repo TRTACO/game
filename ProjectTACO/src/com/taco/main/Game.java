@@ -1,6 +1,7 @@
 package com.taco.main;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -25,8 +26,8 @@ import com.taco.world.World;
 @SuppressWarnings("serial")
 public class Game extends JFrame {
 
-	public static int WIDTH; // = 1280;
-	public static int HEIGHT;// = 720;
+	public static int WIDTH = 1280;
+	public static int HEIGHT = 720;
 	private static final short REC_FPS = 60;
 	private static short fps = 50;
 	private static final long FRAME_PERIOD = 1000000000L / fps;
@@ -162,12 +163,12 @@ public class Game extends JFrame {
 		setTitle(NAME);
 		setResizable(false);
 		panel = (JPanel) getContentPane();
-		// panel.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+		 panel.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
 		setLocationRelativeTo(null);
 		// Fullscreen
-		getGraphicsConfiguration().getDevice().setFullScreenWindow(this);
+		//getGraphicsConfiguration().getDevice().setFullScreenWindow(this);
 		setVisible(true);
 	}
 
@@ -226,6 +227,11 @@ public class Game extends JFrame {
 		initWorld(); // Initialize World
 		executeGameLoop(); // Starts Loop
 	}
+	
+	public void startAgain() {
+		initWorld(); // Initialize World
+		world.setScore(0);
+	}
 
 	public World getWorld() {
 		return world;
@@ -237,7 +243,7 @@ public class Game extends JFrame {
 		panel.removeAll();
 		System.gc();
 		newGame();
-		start();
+		startAgain();
 	}
 
 	@Override

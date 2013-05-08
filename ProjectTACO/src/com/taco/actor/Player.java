@@ -8,6 +8,7 @@ import static java.awt.event.KeyEvent.VK_SPACE;
 import static java.awt.event.KeyEvent.VK_W;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -157,16 +158,20 @@ public class Player extends Actor implements KeyListener, MouseMotionListener {
 
 	@Override
 	public void die() {
-		super.die();
-
 		Graphics2D g = Game.imageGraphics;
+		
 		Color temp = g.getColor();
-		g.setColor(Color.GREEN);
+		g.setColor(new Color(158, 59, 51));
+		Font tempF = g.getFont();
+		g.setFont(new Font("SansSerif", Font.BOLD, 50));
 		g.drawString("Game Over!\nEnemies Killed: " + numberKilled
 				+ "\nWave Number: " + Game.getWave()
 				+ "\n\nPress 'R' to restart.\n(RESTART NOT WORKING!)",
-				Game.WIDTH / 2, Game.HEIGHT / 2);
+				35, Game.HEIGHT / 2);		
+		g.setFont(tempF);
 		g.setColor(temp);
+
+		
 		Main.game.pause();
 		try {
 			Game.state.saveHighScore(Game.prompt("What's your name?"),
@@ -174,6 +179,8 @@ public class Player extends Actor implements KeyListener, MouseMotionListener {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
+		
+		super.die();
 
 		return;
 
