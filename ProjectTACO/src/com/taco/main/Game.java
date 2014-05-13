@@ -62,8 +62,6 @@ public class Game extends JFrame {
 	}
 
 	private void executeGameLoop() {
-		// Thread.currentThread().getThreadGroup().setMaxPriority(7);
-		// Thread.currentThread().setPriority(Thread.NORM_PRIORITY + 1);
 		long nextFrameStart = System.nanoTime();
 		while (true) {
 
